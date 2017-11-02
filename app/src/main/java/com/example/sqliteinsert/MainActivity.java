@@ -28,10 +28,10 @@ public class MainActivity extends AppCompatActivity {
         long identity = helper.insertData(t1,t2);
         if(identity<0)
         {
-            Message.message(this.context,"Unsuccessful");
+            Message.message(this,"Unsuccessful");
         } else
         {
-            Message.message(this.context,"Successful");
+            Message.message(this,"Successful");
         }
     }
 }
