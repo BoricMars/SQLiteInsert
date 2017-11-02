@@ -14,65 +14,48 @@ public class myDbAdapter  {
         helper = new myDbHelper(context);
     }
 
-    public long insertData(String name, String password)
-    {
+    public long insertData(String name, String password) {
         SQLiteDatabase db = helper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(myDbHelper.NAME, name);
-        contentValues.put(myDbHelper.PASSWORD, password);
-        long id = db.insert(myDbHelper.TABLE_NAME, null , contentValues);
+        contentValues.put(UserContract.Contract.UserEntity.USER_NAME, name);
+        contentValues.put(UserContract.Contract.UserEntity.USER_PWD, password);
+        long id = db.insert(UserContract.Contract.DATABASE_NAME, null, contentValues);
         return id;
     }
-   static class myDbHelper extends SQLiteOpenHelper
-   {
-       private static final String DATABASE_NAME = "myDatabase";
-       private static final String TABLE_NAME = "myTable";
-       private static final int DATABASE_Version = 1;
-       private static final String UID="_id";
-       private static final String NAME = "Name";
-       private static final String PASSWORD= "Password";
 
-       // fouten in de Create Table = niet fatsoenlijk onderelkaar gezet.
-       // zo krijg je typefouten en vergeet je dingen
-;       private static final String CREATE_TABLE =
-           "CREATE TABLE " +TABLE_NAME + " ("
-                   +UID         + " INTEGER PRIMARY KEY AUTOINCREMENT , " +
-                   NAME         + " VARCHAR(225) , " +
-                   PASSWORD     + " VARCHAR(225))";
+    static class myDbHelper extends SQLiteOpenHelper {
+        private static final String CREATE_TABLE = "CREATE TABLE " + UserContract.Contract.UserEntity.TABLE_NAME +
+                "( " + UserContract.Contract.UserEntity.UID + " INTEGER PRIMARY KEY AUTOINCREMENT ," + UserContract.Contract.UserEntity.USER_NAME + " VARCHAR(225), " + UserContract.Contract.UserEntity.USER_PWD + " VARCHAR(225));";
+        private static final String DROP_TABLE = "DROP TABLE IF EXISTS " + UserContract.Contract.UserEntity.TABLE_NAME;
+        private Context context;
 
-       private static final String DROP_TABLE =
-               "DROP TABLE IF EXISTS " + TABLE_NAME;
+        public myDbHelper(Context context) {
+            super(context, UserContract.Contract.DATABASE_NAME, null, UserContract.Contract.DATABASE_VERSION);
+            this.context = context;
+            Message.message(context, "Started...");
+        }
 
-       private Context context;
+        @Override
+        public void onCreate(SQLiteDatabase db) {
+            try {
 
-       public myDbHelper(Context context) {
-           super(context, DATABASE_NAME, null, DATABASE_Version);
-           this.context=context;
-           Message.message(context,"Started...");
-       }
+                db.execSQL(CREATE_TABLE);
+                Message.message(context, "TABLE CREATED");
+            } catch (Exception e) {
+                Message.message(context, "" + e);
+            }
+        }
 
-       @Override
-       public void onCreate(SQLiteDatabase db) {
-           try {
-               // create de tables van de database
-               db.execSQL(CREATE_TABLE);
-               // insert values
-               db.execSQL("INSERT INTO myTable VALUES()");
-               Message.message(context,"TABLE CREATED");
-           } catch (Exception e) {
-              Message.message(context,""+e);
-           }
-       }
+        @Override
+        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+            try {
+                Message.message(context, "OnUpgrade");
+                db.execSQL(DROP_TABLE);
+                onCreate(db);
+            } catch (Exception e) {
+                Message.message(context, "" + e);
+            }
+        }
+    }
 
-       @Override
-       public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-          try {
-               Message.message(context,"OnUpgrade");
-               db.execSQL(DROP_TABLE);
-               onCreate(db);
-           }catch (Exception e) {
-               Message.message(context,""+e);
-                          }
-       }
-   }
 }
