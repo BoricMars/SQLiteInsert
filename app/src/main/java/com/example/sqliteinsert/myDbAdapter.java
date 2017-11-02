@@ -36,8 +36,8 @@ public class myDbAdapter  {
        // zo krijg je typefouten en vergeet je dingen
 ;       private static final String CREATE_TABLE =
            "CREATE TABLE " +TABLE_NAME + " ("
-                   +UID         + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                   NAME         + " VARCHAR(225), " +
+                   +UID         + " INTEGER PRIMARY KEY AUTOINCREMENT , " +
+                   NAME         + " VARCHAR(225) , " +
                    PASSWORD     + " VARCHAR(225))";
 
        private static final String DROP_TABLE =
