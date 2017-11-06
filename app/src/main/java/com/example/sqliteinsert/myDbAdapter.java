@@ -2,8 +2,11 @@ package com.example.sqliteinsert;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import static com.example.sqliteinsert.UserContract.Contract.UserEntity.TABLE_NAME;
 
 public class myDbAdapter  {
 
@@ -23,10 +26,21 @@ public class myDbAdapter  {
         return id;
     }
 
+    public Cursor getData(){
+        SQLiteDatabase db = helper.getWritableDatabase();
+        String query = "SELECT * FROM " + TABLE_NAME;
+        Cursor data = db.rawQuery(query, null);
+        return data;
+    }
+
     static class myDbHelper extends SQLiteOpenHelper {
-        private static final String CREATE_TABLE = "CREATE TABLE " + UserContract.Contract.UserEntity.TABLE_NAME +
-                "( " + UserContract.Contract.UserEntity.UID + " INTEGER PRIMARY KEY AUTOINCREMENT ," + UserContract.Contract.UserEntity.USER_NAME + " VARCHAR(225), " + UserContract.Contract.UserEntity.USER_PWD + " VARCHAR(225));";
-        private static final String DROP_TABLE = "DROP TABLE IF EXISTS " + UserContract.Contract.UserEntity.TABLE_NAME;
+        private static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + "("
+                + UserContract.Contract.UserEntity.UID + " INTEGER PRIMARY KEY AUTOINCREMENT ,"
+                + UserContract.Contract.UserEntity.USER_NAME + " VARCHAR(225), "
+                + UserContract.Contract.UserEntity.USER_PWD + " VARCHAR(225));";
+        private static final String DROP_TABLE = "DROP TABLE IF EXISTS "
+                + TABLE_NAME;
+        // laat zien in welke view/activity je zit.
         private Context context;
 
         public myDbHelper(Context context) {
